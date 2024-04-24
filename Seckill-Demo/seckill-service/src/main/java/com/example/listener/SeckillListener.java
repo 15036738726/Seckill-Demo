@@ -1,7 +1,6 @@
 package com.example.listener;
 
 import com.example.service.GoodsService;
-import com.example.service.OrderService;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.spring.annotation.ConsumeMode;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
@@ -130,6 +129,8 @@ public class SeckillListener implements RocketMQListener<MessageExt> {
              */
             Boolean flag = redisTemplate.opsForValue().setIfAbsent("lock:" + goodsId, "", Duration.ofSeconds(30));
             if (flag) {
+                // 手写看门狗机制  参考My-watch-Dog
+
                 // 拿到锁成功
                 try {
                     goodsService.realSeckillCaseC(userId, goodsId);
